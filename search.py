@@ -3,6 +3,8 @@ from pyimagesearch.colordescriptor import ColorDescriptor
 from pyimagesearch.searcher import Searcher
 import argparse
 import cv2
+from matplotlib import pyplot
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--index", required=True,
@@ -21,11 +23,29 @@ features = cd.describe(query)
 # perform the search
 searcher = Searcher(args["index"])
 results = searcher.search(features)
-# display the query
-cv2.imshow("Query", query)
-# loop over the results
+
+# create figure
+fig = pyplot.figure(figsize=(10, 10))
+# setting values to rows and column variables
+rows = 7
+columns = 2
+index = 1
+
+# showing image
+fig.add_subplot(rows, columns, index)
+pyplot.imshow(query)
+pyplot.axis('off')
+pyplot.title("Query")
+
+index = index + 3
+
 for (score, resultID) in results:
     # load the result image and display it
     result = cv2.imread(args["result_path"] + "/" + resultID)
-    cv2.imshow("Result", result)
-    cv2.waitKey(0)
+    index = index + 1
+    fig.add_subplot(rows, columns, index)
+    pyplot.imshow(result)
+    pyplot.axis('off')
+    pyplot.title("")
+
+pyplot.show()
